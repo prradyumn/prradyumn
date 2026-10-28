@@ -1,0 +1,51 @@
+/* Shared look for every rendered scene: same tokens as the portfolio (see Portfolio/DESIGN.md). */
+:root {
+  --paper: #F1E9D8; --paper-2: #E7DCC5; --ink: #16130F; --ink-2: #4A443B;
+  --red: #E5371C; --yellow: #F7C531; --cyan: #3FA9D6;
+  --bd: 3px solid var(--ink);
+  --f-display: 'Archivo', sans-serif; --f-body: 'Schibsted Grotesk', sans-serif;
+  --f-mono: 'JetBrains Mono', monospace; --f-letter: 'Bangers', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { background: var(--paper); overflow: hidden; }
+body { font-family: var(--f-body); color: var(--ink); -webkit-font-smoothing: antialiased; }
+
+.stage { position: relative; overflow: hidden; background: var(--paper); }
+.panel { position: absolute; inset: 10px; border: var(--bd); overflow: hidden; isolation: isolate; background: var(--paper); }
+
+.display {
+  font-family: var(--f-display); font-weight: 900; text-transform: uppercase;
+  font-variation-settings: 'wdth' var(--w, 62); line-height: .86; letter-spacing: -.01em;
+}
+.display .char { display: inline-block; font-variation-settings: 'wdth' var(--w, 62); }
+.caption {
+  display: inline-flex; align-items: center; gap: .55em;
+  background: var(--yellow); border: 2.5px solid var(--ink); padding: .32em .7em;
+  font-family: var(--f-mono); font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; line-height: 1.2;
+}
+.caption--paper { background: var(--paper); }
+.caption--ink { background: var(--ink); color: var(--paper); }
+.dot { width: 9px; height: 9px; border-radius: 50%; background: #2F9E44; }
+.sfx {
+  font-family: var(--f-letter); color: var(--red); letter-spacing: .03em; line-height: .9;
+  -webkit-text-stroke: 2.5px var(--ink); paint-order: stroke fill; text-shadow: 4px 4px 0 var(--ink);
+  display: inline-block;
+}
+.burst {
+  position: absolute; display: grid; place-items: center;
+  background: var(--yellow); border: 3px solid var(--ink);
+  clip-path: polygon(50% 0, 60% 22%, 84% 6%, 76% 32%, 100% 36%, 80% 54%, 98% 78%, 70% 70%, 66% 100%, 50% 78%, 32% 98%, 30% 72%, 2% 82%, 20% 56%, 0 36%, 24% 32%, 14% 6%, 40% 22%);
+}
+.bubble {
+  position: absolute; background: #FFFBF2; border: 3px solid var(--ink); border-radius: 999px / 70%;
+  padding: .6em 1.2em; font-family: var(--f-letter); letter-spacing: .04em; line-height: 1.1; text-transform: uppercase;
+}
+.bubble::after {
+  content: ''; position: absolute; left: var(--tail-x, 24%); bottom: -19px; width: 22px; height: 20px;
+  background: #FFFBF2; border-right: 3px solid var(--ink); border-bottom: 3px solid var(--ink);
+  transform: skewX(-32deg) rotate(18deg); border-bottom-right-radius: 4px;
+}
+.halftone {
+  background-image: radial-gradient(circle, var(--dot, rgba(22,19,15,.2)) 1.4px, transparent 2px);
+  background-size: 9px 9px;
+}

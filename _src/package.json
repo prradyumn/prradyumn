@@ -1,0 +1,13 @@
+{
+  "name": "profile-motion",
+  "private": true,
+  "type": "module",
+  "description": "GSAP + three.js scenes rendered to the GIFs used in the profile README.",
+  "scripts": {
+    "serve": "python3 -m http.server 8777",
+    "render": "node render.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.56.1"
+  }
+}

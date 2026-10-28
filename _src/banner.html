@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>banner</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Bangers&family=JetBrains+Mono:wght@500;600&family=Schibsted+Grotesk:wght@500;700&display=block" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.min.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+} }
+</script>
+<style>
+  .stage { width: 1200px; height: 420px; }
+  .sun {
+    position: absolute; width: 560px; height: 560px; left: 76%; top: 50%; translate: -50% -50%; border-radius: 50%;
+    background: radial-gradient(circle, var(--red) 0 44%, transparent 44.4%);
+  }
+  .rays {
+    position: absolute; width: 1100px; height: 1100px; left: 76%; top: 50%; translate: -50% -50%; border-radius: 50%;
+    background: repeating-conic-gradient(from 0deg, rgba(22,19,15,.10) 0deg 5deg, transparent 5deg 12deg);
+    -webkit-mask: radial-gradient(circle, #000 0 52%, transparent 53%);
+  }
+  .sun::after {
+    content: ''; position: absolute; inset: 0; border-radius: 50%;
+    background-image: radial-gradient(circle, var(--ink) 1.7px, transparent 2.3px); background-size: 10px 10px;
+    -webkit-mask: radial-gradient(circle, transparent 0 28%, #000 44%, transparent 44.4%); opacity: .2;
+  }
+  #cast { position: absolute; inset: 0; }
+  .copy { position: absolute; left: 40px; top: 30px; bottom: 30px; width: 640px; display: flex; flex-direction: column; z-index: 2; }
+  .tops { display: flex; gap: 10px; }
+  .name { font-size: 128px; margin-top: auto; }
+  .name .line { display: block; white-space: nowrap; clip-path: inset(-20% -100vw 0 -20%); }
+  .name .line + .line { color: var(--red); }
+  .tag { margin-top: 18px; font-size: 21px; font-weight: 500; line-height: 1.35; max-width: 34ch; }
+  .tag b { font-weight: 700; position: relative; white-space: nowrap; }
+  .tag b::before {
+    content: ''; position: absolute; left: -2px; right: -2px; top: 58%; bottom: 6%; z-index: -1;
+    background: var(--yellow); transform-origin: left; transform: scaleX(var(--hl, 1));
+  }
+  .pow { width: 170px; height: 150px; left: 640px; top: 40px; z-index: 3; }
+  .pow .sfx { font-size: 50px; rotate: -8deg; }
+  .say { left: 860px; top: 26px; font-size: 22px; z-index: 3; --tail-x: 30%; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <div class="panel">
+    <div class="rays" id="rays"></div>
+    <div class="sun" id="sun"></div>
+    <div id="cast"></div>
+    <div class="copy">
+      <div class="tops">
+        <span class="caption">Issue #02 · the builder</span>
+        <span class="caption caption--paper"><span class="dot"></span>ConveGenius · Noida</span>
+      </div>
+      <h1 class="name display"><span class="line">Pradyumn</span><span class="line">Awasthi</span></h1>
+      <p class="tag" id="tag">I design <b>learning games, 3D sims &amp; AI tools</b>, then I build them and ship them.</p>
+    </div>
+    <div class="burst pow" id="pow"><span class="sfx">POW!</span></div>
+    <div class="bubble say" id="say">30 live builds!</div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script type="module">
+import { initHero3D } from './hero3d.js';
+const { gsap, SplitText } = window;
+gsap.registerPlugin(SplitText);
+await document.fonts.ready;
+
+const hero = initHero3D(document.getElementById('cast'), {});
+const DUR = 7;
+const chars = SplitText.create('.name .line', { type: 'chars', charsClass: 'char' }).chars;
+
+gsap.set(chars, { yPercent: 115, '--w': 96 });
+gsap.set('#tag', { opacity: 0, y: 14 });
+gsap.set('#tag', { '--hl': 0 });
+gsap.set(['#pow', '#say'], { scale: 0, opacity: 0 });
+
+const tl = gsap.timeline({ paused: true });
+// a fixed-length spacer keeps the loop at exactly DUR (rays stay still: rotating them doubles the GIF size)
+tl.set({}, {}, DUR);
+// a virtual cursor sweeps a figure-eight, which moves the light over the halftone
+const cur = { a: 0 };
+tl.to(cur, {
+  a: Math.PI * 2, duration: DUR, ease: 'none',
+  onUpdate: () => window.dispatchEvent(new PointerEvent('pointermove', {
+    clientX: innerWidth * (0.5 + 0.45 * Math.sin(cur.a)),
+    clientY: innerHeight * (0.5 + 0.4 * Math.sin(cur.a * 2)),
+  })),
+}, 0);
+
+tl.to(chars, { yPercent: 0, duration: .9, ease: 'expo.out', stagger: .035 }, .15)
+  .to(chars, { '--w': 62, duration: 1.1, ease: 'expo.inOut', stagger: { each: .025, from: 'center' } }, .45)
+  .to(hero.state, { intro: 1, duration: 1.8, ease: 'power2.out' }, .3)
+  .to('#tag', { opacity: 1, y: 0, duration: .6, ease: 'power3.out' }, 1.1)
+  .to('#tag', { '--hl': 1, duration: .6, ease: 'power2.inOut' }, 1.5)
+  .fromTo('#pow', { scale: 2.6, rotate: -30, opacity: 0 }, { scale: 1, rotate: 0, opacity: 1, duration: .45, ease: 'back.out(2.2)' }, 2.3)
+  .to('#pow', { scale: .9, rotate: 6, duration: .15, yoyo: true, repeat: 1 }, 2.75)
+  .fromTo('#say', { scale: .2, opacity: 0, transformOrigin: '30% 100%' }, { scale: 1, opacity: 1, duration: .4, ease: 'back.out(2.4)' }, 2.9)
+  // outro: everything leaves, so the last frame matches the first
+  .to('#pow', { scale: 0, rotate: 40, opacity: 0, duration: .35, ease: 'power2.in' }, 5.3)
+  .to('#say', { scale: 0, opacity: 0, duration: .3, ease: 'power2.in' }, 5.4)
+  .to(hero.state, { scroll: 1, intro: 0, duration: 1.1, ease: 'power2.in' }, 5.5)
+  .to('#tag', { opacity: 0, y: 10, duration: .4 }, 5.7)
+  .to(chars, { yPercent: 115, duration: .55, ease: 'power3.in', stagger: .02 }, 5.75)
+  .set(hero.state, { scroll: 0 }, DUR - .01)
+  .set('#tag', { '--hl': 0 }, DUR - .01);
+tl.duration(DUR);
+
+window.SCENE = { duration: DUR, seek: t => tl.seek(t, false) };
+</script>
+</body>
+</html>

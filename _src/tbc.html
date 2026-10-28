@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>to be continued</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Bangers&family=JetBrains+Mono:wght@500;600&display=block" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<style>
+  .stage { width: 1200px; height: 220px; }
+  .panel { background: var(--ink); color: var(--paper); }
+  .rays {
+    position: absolute; width: 1400px; height: 1400px; left: 88%; top: 50%; translate: -50% -50%;
+    background: repeating-conic-gradient(from 0deg, transparent 0deg 6deg, rgba(229,55,28,.28) 6deg 10deg);
+    -webkit-mask: radial-gradient(circle, #000 0 18%, transparent 46%);
+  }
+  .words { position: absolute; left: 40px; top: 50%; translate: 0 -50%; font-size: 104px; color: var(--paper); white-space: nowrap; }
+  .words .ell { color: var(--red); }
+  .next { position: absolute; right: 36px; bottom: 26px; font-size: 14px; color: var(--ink); }
+  .issue { position: absolute; right: 36px; top: 26px; }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="panel">
+    <div class="rays" id="rays"></div>
+    <span class="caption issue">End of issue #02</span>
+    <div class="words display" id="words">To be continued<span class="ell"><span class="d">.</span><span class="d">.</span><span class="d">.</span></span></div>
+    <span class="caption caption--paper next" id="next">Next issue: whatever ships this week →</span>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script type="module">
+const { gsap, SplitText } = window;
+gsap.registerPlugin(SplitText);
+await document.fonts.ready;
+const DUR = 4.4;
+const words = SplitText.create('#words', { type: 'words', wordsClass: 'w' }).words;
+const dots = gsap.utils.toArray('.d');
+gsap.set(words, { scale: 0, opacity: 0, rotate: -12, display: 'inline-block', transformOrigin: '50% 80%' });
+gsap.set(dots, { opacity: 0, y: -30 });
+gsap.set('#next', { x: 60, opacity: 0 });
+const tl = gsap.timeline({ paused: true });
+tl.to(words, { scale: 1, opacity: 1, rotate: 0, duration: .4, ease: 'back.out(2.6)', stagger: .16 }, .15)
+  .to(dots, { opacity: 1, y: 0, duration: .3, ease: 'bounce.out', stagger: .14 }, .85)
+  .to('#next', { x: 0, opacity: 1, duration: .5, ease: 'expo.out' }, 1.3)
+  .to(dots, { opacity: .25, duration: .2, stagger: { each: .15, repeat: 3, yoyo: true } }, 1.9)
+  .to(words, { y: 40, opacity: 0, duration: .35, ease: 'power2.in', stagger: .05 }, 3.7)
+  .to(dots, { opacity: 0, duration: .2 }, 3.7)
+  .to('#next', { x: 60, opacity: 0, duration: .3, ease: 'power2.in' }, 3.75)
+  .set({}, {}, DUR);
+window.SCENE = { duration: DUR, seek: t => tl.seek(t, false) };
+</script>
+</body>
+</html>

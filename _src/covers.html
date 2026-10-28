@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>covers</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Bangers&family=JetBrains+Mono:wght@500;600&family=Schibsted+Grotesk:wght@400;500;600&display=block" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<style>
+  html, body { overflow: visible; }
+  body { padding: 20px; display: grid; gap: 30px; }
+  .cover { width: 606px; padding: 3px 12px 12px 3px; background: var(--paper); }
+  .card { border: 3px solid var(--ink); background: var(--paper); box-shadow: 9px 9px 0 var(--ink); }
+  .top { display: flex; justify-content: space-between; align-items: center; padding: 9px 14px; border-bottom: 3px solid var(--ink);
+    font-family: var(--f-mono); font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+  .top b { background: var(--ink); color: var(--paper); padding: 2px 8px; }
+  .art { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-bottom: 3px solid var(--ink); background: var(--ink); }
+  .art img { width: 100%; height: 100%; object-fit: cover; object-position: var(--pos, center top); display: block; }
+  .art .sfx { position: absolute; right: 14px; top: 10px; font-size: 44px; rotate: 7deg; }
+  .body { padding: 16px 18px 18px; }
+  .title { font-size: 46px; font-variation-settings: 'wdth' 66; line-height: .92; }
+  .desc { margin-top: 8px; font-size: 17px; line-height: 1.4; color: var(--ink-2); min-height: 48px; }
+  .chips { margin-top: 12px; display: flex; gap: 7px; flex-wrap: wrap; }
+  .chip { font-family: var(--f-mono); font-size: 13px; font-weight: 600; border: 2.5px solid var(--ink); padding: 3px 9px; background: var(--paper); }
+  .chip.y { background: var(--yellow); }
+</style>
+</head>
+<body>
+<script>
+const COVERS = [
+  ['varanasi', '01', 'Game · three.js open world', 'WHOOSH!', 'The Legend of Varanasi', 'Open-world adventure on the ghats of Kashi. Five sacred flames, the Ganga, and Asuras after dark.', ['5 chapters', '107 moves', '60 fps']],
+  ['sonar', '02', 'Learning game · Grade 6', 'PING!', 'Sonar Defence', 'Integers on a navigation scale, played from inside a submarine cockpit.', ['3 levels', 'guided replay']],
+  ['storyforge', '03', 'AI · agentic workflow', 'KA-CHUNK!', 'StoryForge', 'Stakeholder notes in, INVEST-reviewed user stories out, pushed to Jira.', ['5 agents', '99.5% traceable']],
+  ['delhi', '04', 'Digital twin · 3D city', 'VROOM!', 'Delhi Pulse Twin', 'Connaught Place to India Gate in the browser, with a scenario lab.', ['3,196 buildings', '166 stops']],
+  ['mig29', '05', 'Flight sim · three.js', 'ZOOOM!', 'MiG-29K Carrier Sim', 'Cold start, ski-jump launch, the wire, and an LSO who grades every pass.', ['7 lessons', 'fly-by-wire'], '70% center'],
+  ['repair', '06', '3D teaching sim', 'ZAP!', 'Mobile Charging Repair', 'Click any part and the camera flies to it and explains why it matters.', ['294 labelled parts', '6 assets']],
+];
+for (const [id, no, kind, sfx, title, desc, chips, pos] of COVERS) {
+  document.write(`<div class="cover" id="c-${id}"><div class="card">
+    <div class="top"><b>#${no}</b><span>${kind}</span></div>
+    <div class="art" style="--pos:${pos || 'center top'}"><img src="img/${id}.jpg" alt=""><span class="sfx">${sfx}</span></div>
+    <div class="body"><div class="title display">${title}</div><p class="desc">${desc}</p>
+    <div class="chips">${chips.map((c, i) => `<span class="chip${i ? '' : ' y'}">${c}</span>`).join('')}</div></div>
+  </div></div>`);
+}
+</script>
+</body>
+</html>

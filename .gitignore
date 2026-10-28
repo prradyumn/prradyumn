@@ -1,0 +1,4 @@
+node_modules/
+_src/node_modules
+_src/.frames/
+.DS_Store
